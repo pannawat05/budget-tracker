@@ -8,7 +8,7 @@ import Login from './pages/Login'
 import Profile from './pages/Profile'
 const AppLayout = () => (
   <>
-    <Nav className="nav" />
+    <Nav />
     <main className="content-container"> {/* (แนะนำ) หุ้มเนื้อหาหลัก */}
       <Outlet /> 
     </main>
