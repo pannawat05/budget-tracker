@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { GetProfile,Logout } from '../control/auth';
 
 function Nav() {

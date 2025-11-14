@@ -1,15 +1,51 @@
-import  { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { fetchTransaction } from '../control/transaction'
 
+// 1. (สำคัญ) กำหนด Type ของ Transaction
+// (ควรจะเป็น Type เดียวกับที่คุณใช้ใน Summary.tsx)
+interface Transaction {
+  id: string;
+  createdAt: string;
+  note: string;
+  amount: number;
+  type: 'income' | 'expense';
+  categoryName: string;
+}
+
 function Activity() {
-  const [transactions, setTransactions] = useState([])
+  // 2. (สำคัญ) บอก useState ว่าเป็นอาร์เรย์ของ Transaction[]
+  const [transactions, setTransactions] = useState<Transaction[]>([])
+  
+  // 3. (แนะนำ) เพิ่ม Loading และ Error states
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {   
     const token = localStorage.getItem('token') || ''
+    setIsLoading(true); // 4. เริ่มโหลด
+    setError(null);
+
     fetchTransaction(token)
-      .then(data => setTransactions(data))
-      .catch(error => console.error('Error fetching transactions:', error))
+      .then(data => {
+        setTransactions(data);
+        setIsLoading(false); // 5. โหลดเสร็จ
+      })
+      .catch(error => {
+        console.error('Error fetching transactions:', error);
+        setError('Failed to fetch transactions. Please try again.');
+        setIsLoading(false); // 6. โหลดล้มเหลว
+      })
   }, [])
+
+  // 7. (แนะนำ) แสดงผลตอนกำลังโหลด
+  if (isLoading) {
+    return <div className='text-center mt-20'>Loading...</div>
+  }
+
+  // 8. (แนะนำ) แสดงผลตอน Error
+  if (error) {
+    return <div className='text-center mt-20 text-red-500'>{error}</div>
+  }
 
   return (
     <div>
@@ -28,20 +64,30 @@ function Activity() {
         </thead>
 
         <tbody className="bg-green-50 divide-y divide-green-200">
-          {transactions.map((transaction) => (
-            <tr key={transaction.id}>
-              <td className="px-6 py-4 whitespace-nowrap">
-               {new Date(transaction.createdAt)
-    .toLocaleString("th-TH", { timeZone: "Asia/Bangkok" })}
+          {/* 9. (แนะนำ) แสดงผลกรณีไม่มีข้อมูล */}
+          {transactions.length === 0 ? (
+            <tr>
+              <td colSpan={5} className="px-6 py-4 text-center text-gray-500">
+                No transactions found.
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">{transaction.note}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-right">
-                {transaction.amount.toFixed(2)}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-center">{transaction.type}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{transaction.categoryName}</td>
             </tr>
-          ))}
+          ) : (
+            transactions.map((transaction) => (
+              <tr key={transaction.id}>
+                <td className="px-6 py-4 whitespace-nowrap">
+                {/* (โค้ดแสดงวันที่ของคุณดีอยู่แล้วครับ) */}
+                {new Date(transaction.createdAt)
+      .toLocaleString("th-TH", { timeZone: "Asia/Bangkok" })}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">{transaction.note || '-'}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-right">
+                  {transaction.amount.toFixed(2)}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-center">{transaction.type}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{transaction.categoryName || 'N/A'}</td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>
