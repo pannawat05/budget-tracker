@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+select{
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+    background-color: transparent;
+    margin: 0; /* Remove default margin */      
+    padding: 0; /* Remove default padding */
+    -webkit-appearance: none; /* Remove default styling in WebKit browsers */
+    -moz-appearance: none; /* Remove default styling in Firefox */
+    appearance: none; /* Remove default styling */  
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.516 7.548l4.484 4.484 4.484-4.484L15.484 9l-5.484 5.484L4.516 9z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5em; /* Add padding to the right to make space for the arrow */    
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 0.25rem; /* Add rounded corners */
+    height: 2.5em; /* Set a fixed height */
+    width: 100%; /* Make the select take the full width of its container */
+    box-sizing: border-box; /* Include padding and border in the element's total width and
+    height */
+    cursor: pointer; /* Change the cursor to a pointer on hover */
+    font-weight: 500; /* Make the font weight medium */
+    transition: border-color 0.3s ease; /* Add a transition effect for the border color */  
+    
+}

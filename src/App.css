@@ -1,0 +1,43 @@
+.filter-options {
+  display: none;
+}
+
+.filter-options.active {
+  display: block;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.filterbtn:hover{
+  font-size: larger; /* Tailwind's gray-100 */
+  cursor: pointer;
+}
+
+.nav{
+    position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+#menu{
+animation: slideDown 0.3s ease-in-out;
+}
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
