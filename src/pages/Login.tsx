@@ -1,7 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
 import { Getlogin } from '../control/auth';
-import Swal from 'sweetalert2';
 
 function Login() {
   const [email, setEmail] = useState('');

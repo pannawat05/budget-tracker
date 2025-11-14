@@ -3,7 +3,7 @@ import { useState,useEffect } from 'react'
 import { GetProfile } from '../control/auth'
 
 function Profile() {
-    const [profileData, setProfileData] = useState([]);
+    const [profileData, setProfileData] = useState(null);
     useEffect(() => {
         const fetchProfile = async () => {
             const token = localStorage.getItem("token") || "";
