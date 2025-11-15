@@ -42,6 +42,7 @@ function App() {
           <Route path="/summary" element={<Summary />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/register" element={<Signup/>} />
+           <Route path="/login" element={<Login/>} />
           <Route path="*" element={<Activity />} /> {/* (แนะนำ) หน้าที่หาไม่เจอ ให้กลับไปหน้าหลัก */}
         </Route>
 
