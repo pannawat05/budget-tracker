@@ -123,4 +123,43 @@ export async function Logout(token: string) {
   }
 }
 
+export async function Getregister(payload: Payload) {
+  try {
+    const res = await fetch(`${link}/register`, {  // ✅ ใช้ backticks
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "*/*",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("Server error:", res.status, text);
+      throw new Error(`Server error: ${res.status}`);  // ✅ ใช้ backticks
+    }
+
+    const data = await res.json();
+    console.log("Register success ✅", data);
+
+    await Swal.fire({
+      title: "Success!",
+      text: "Registration successful! Please log in.",
+      icon: "success"
+    });
+     window.location.href = "/login";
+
+    return data;
+  } catch (error) {
+    console.error("Registration failed:", error);
+    await Swal.fire({
+      title: "Error!",
+      text: error instanceof Error ? error.message : "Registration failed",
+      icon: "error"
+    });
+    throw error;
+  }
+}
+
 export type { Payload };

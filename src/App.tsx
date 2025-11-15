@@ -6,6 +6,7 @@ import Summary from './pages/Summary'
 import Nav from './components/Nav'
 import Login from './pages/Login'
 import Profile from './pages/Profile'
+import Signup from './pages/Signup'
 const AppLayout = () => (
   <>
     <Nav />
@@ -40,6 +41,7 @@ function App() {
           <Route path="/activity" element={<Activity />} />
           <Route path="/summary" element={<Summary />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/register" element={<Signup/>} />
           <Route path="*" element={<Activity />} /> {/* (แนะนำ) หน้าที่หาไม่เจอ ให้กลับไปหน้าหลัก */}
         </Route>
 
