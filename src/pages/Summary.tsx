@@ -55,7 +55,7 @@ function Summary() {
   const filteredTransactions = useMemo(() => {
     if (transactions.length === 0) return []
 
-    let filtered = [...transactions]
+    const  filtered = [...transactions]
 
     // ตรวจสอบว่ามี Filter ทำงานอยู่หรือไม่
     const isFilterActive = (filterType === 'month' && selectedMonth) || 
