@@ -10,7 +10,7 @@ import Signup from './pages/Signup'
 const AppLayout = () => (
   <>
     <Nav />
-    <main className="content-container"> {/* (แนะนำ) หุ้มเนื้อหาหลัก */}
+    <main className="content-container" style={{width:'100vw'}}> {/* (แนะนำ) หุ้มเนื้อหาหลัก */}
       <Outlet /> 
     </main>
   </>
