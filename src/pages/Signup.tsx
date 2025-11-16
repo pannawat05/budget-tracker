@@ -87,7 +87,7 @@ function Signup() {
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {/* 14. เปลี่ยนข้อความตอนโหลด */}
-            {isLoading ? 'Logging In...' : ' Sign up'}
+            {isLoading ? 'signing up...' : ' Sign up'}
           </button>
         </form>
 
