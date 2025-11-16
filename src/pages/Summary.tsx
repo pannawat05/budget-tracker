@@ -51,22 +51,19 @@ function Summary() {
   }, [])
 
   // 3. 🚀 [Performance] ใช้ useMemo กรองข้อมูลแทน useEffect
-  //    โค้ดนี้จะรันใหม่ "อัตโนมัติ" เมื่อ dependencies (วงเล็บท้าย) เปลี่ยน
   const filteredTransactions = useMemo(() => {
     if (transactions.length === 0) return []
 
-    const  filtered = [...transactions]
+    let filtered = [...transactions]
 
-    // ตรวจสอบว่ามี Filter ทำงานอยู่หรือไม่
     const isFilterActive = (filterType === 'month' && selectedMonth) || 
                            (filterType === 'dateRange' && startDate && endDate)
 
     if (!isFilterActive) {
-      return filtered // คืนค่าทั้งหมดถ้าไม่มี Filter
+      return filtered 
     }
 
     if (filterType === 'month' && selectedMonth) {
-      // กรองตามเดือนและปี
       return filtered.filter(t => {
         if (!t.createdAt) return false
         try {
@@ -79,11 +76,10 @@ function Summary() {
     }
     
     if (filterType === 'dateRange' && startDate && endDate) {
-      // กรองตามช่วงวันที่ (วิธีที่แม่นยำกว่า)
       try {
-        const start = new Date(startDate) // ได้วันที่ เช่น 10 พ.ย. 00:00:00
+        const start = new Date(startDate)
         const end = new Date(endDate)
-        end.setDate(end.getDate() + 1) // ตั้งเป็นวันถัดไป 00:00:00 เพื่อให้รวมวันสุดท้าย
+        end.setDate(end.getDate() + 1)
 
         return filtered.filter(t => {
           if (!t.createdAt) return false
@@ -92,17 +88,16 @@ function Summary() {
         })
       } catch (e) {
         console.error("Error parsing date filter:", e)
-        return filtered // คืนค่าเดิมถ้า Date ผิดพลาด
+        return filtered
       }
     }
     
-    return filtered // Fallback
+    return filtered
 
   }, [filterType, selectedMonth, selectedYear, startDate, endDate, transactions])
-  // 👆 โค้ดนี้จะทำงานใหม่ เมื่อค่าเหล่านี้เปลี่ยนเท่านั้น
 
   
-  // ✅ คำนวณยอดรวม (โค้ดเดิมดีอยู่แล้ว, ตอนนี้มันจะอิง 'filteredTransactions' ที่อัปเดตเสมอ)
+  // ✅ คำนวณยอดรวม
   const totalIncome = filteredTransactions
     .filter(t => t.type === 'income')
     .reduce((sum, t) => sum + (t.amount || 0), 0)
@@ -123,9 +118,9 @@ function Summary() {
         summary[category] = (summary[category] || 0) + (t.amount || 0)
       })
     return summary
-  }, [filteredTransactions]) // 👆 คำนวณใหม่เมื่อ 'filteredTransactions' เปลี่ยนเท่านั้น
+  }, [filteredTransactions]) 
 
-  // ✅ กราฟที่ 1: Income vs Expense (เหมือนเดิม)
+  // ✅ กราฟที่ 1: Income vs Expense
   useEffect(() => {
     if (!incomeExpenseChartRef.current) return
     if (incomeExpenseChartInstance.current) incomeExpenseChartInstance.current.destroy()
@@ -134,17 +129,32 @@ function Summary() {
       labels: ['Income', 'Expense'],
       datasets: [
         {
-          label: 'Budget Summary', // 🚀 แก้ไขเล็กน้อย: 'label' ควรเป็น string
+          label: 'Budget Summary',
           data: [totalIncome, totalExpense],
           backgroundColor: ['rgb(54, 162, 235)', 'rgb(255, 99, 132)'],
           hoverOffset: 6,
         },
       ],
     }
-    incomeExpenseChartInstance.current = new Chart(incomeExpenseChartRef.current, { type: 'pie', data, /* ... options */ })
+    incomeExpenseChartInstance.current = new Chart(incomeExpenseChartRef.current, { 
+      type: 'pie', 
+      data,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: true,
+            text: 'Income vs Expense'
+          }
+        }
+      }
+    })
   }, [totalIncome, totalExpense])
 
-  // ✅ กราฟที่ 2: Expense by Category (แก้ไขบั๊ก)
+  // ✅ กราฟที่ 2: Expense by Category
   useEffect(() => {
     if (!categoryChartRef.current) return
     if (categoryChartInstance.current) categoryChartInstance.current.destroy()
@@ -158,18 +168,39 @@ function Summary() {
       labels,
       datasets: [
         {
-          // 5. 🚀 [FIX] แก้บั๊ก: 'label' ต้องเป็น string, ไม่ใช่ array
           label: 'Amount',
           data: values,
-          backgroundColor: ['rgb(54, 162, 235)', 'rgb(255, 99, 132)', 'rgb(255, 206, 86)', 'rgb(75, 192, 192)', 'rgb(153, 102, 255)', 'rgb(255, 159, 64)'],
+          backgroundColor: [
+            'rgb(54, 162, 235)', 
+            'rgb(255, 99, 132)', 
+            'rgb(255, 206, 86)', 
+            'rgb(75, 192, 192)', 
+            'rgb(153, 102, 255)', 
+            'rgb(255, 159, 64)'
+          ],
           hoverOffset: 8,
         },
       ],
     }
-    categoryChartInstance.current = new Chart(categoryChartRef.current, { type: 'doughnut', data, /* ... options */ })
+    categoryChartInstance.current = new Chart(categoryChartRef.current, { 
+      type: 'doughnut', 
+      data,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: true,
+            text: 'Expenses by Category'
+          }
+        }
+      }
+    })
   }, [expenseByCategory])
 
-  // ✅ ฟังก์ชัน Reset Filter (เหมือนเดิม)
+  // ✅ ฟังก์ชัน Reset Filter
   const handleResetFilter = () => {
     setSelectedMonth('')
     setSelectedYear(new Date().getFullYear().toString())
@@ -177,17 +208,17 @@ function Summary() {
     setEndDate('')
   }
 
-  // สร้างตัวเลือกปี (เหมือนเดิม)
+  // สร้างตัวเลือกปี
   const yearOptions = []
   const currentYear = new Date().getFullYear()
   for (let i = 0; i < 5; i++) yearOptions.push(currentYear - i)
 
-  // 6. 🚀 [React Best Practice] แก้ไข toggleFilter ให้ใช้ State
+  // ✅ ฟังก์ชัน Toggle
   const toggleFilter = () => {
     setToggle(!toggle)
   }
 
-  // 7. 🚀 แสดง Loading/Error states
+  // ✅ แสดง Loading/Error states
   if (isLoading) {
     return <div style={{ textAlign: 'center', marginTop: '50px' }}>Loading transactions...</div>
   }
@@ -211,14 +242,24 @@ function Summary() {
           margin: '2rem auto', 
           maxWidth: '700px', 
           padding: '20px',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+          borderRadius: '8px',
+          backgroundColor: '#fff'
         }}
       >
-        <div style={{ marginBottom: '15px' }} className='filterbtn' onClick={toggleFilter}>
+        <div 
+          style={{ 
+            marginBottom: '15px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center'
+          }} 
+          className='filterbtn' 
+          onClick={toggleFilter}
+        >
           <i 
             className="fa-solid fa-filter" 
             id='filter' 
-            // 8. 🚀 หมุน Icon ด้วย CSS (ผ่าน State)
             style={{ 
               transform: toggle ? 'rotate(90deg)' : 'rotate(0deg)',
               transition: 'transform 0.2s'
@@ -227,114 +268,118 @@ function Summary() {
           <span style={{ fontWeight: 'bold', marginLeft: '10px' }}>Filter:</span>
         </div>
 
-        {/* 9. 🚀 แสดง/ซ่อน Filter ด้วย State (แทน CSS 'active') */}
-        {toggle && (
-          <div className="filter-options">
-            {/* เลือกประเภทการกรอง */}
-            <div style={{ marginBottom: '20px' }}>
-              <label style={{ marginRight: '20px' }}>
-                <input
-                  type="radio"
-                  value="month"
-                  checked={filterType === 'month'}
-                  onChange={(e) => setFilterType(e.target.value as 'month' | 'dateRange')}
-                  style={{ marginRight: '5px' }}
-                />
-                กรองตามเดือน
-              </label>
+        {/* 🚀 แก้ไข: ใช้ inline styles แทน Tailwind */}
+        <div 
+          style={{
+            maxHeight: toggle ? '500px' : '0',
+            opacity: toggle ? 1 : 0,
+            overflow: 'hidden',
+            transition: 'max-height 0.3s ease-in-out, opacity 0.3s ease-in-out'
+          }}
+        >
+          {/* เลือกประเภทการกรอง */}
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ marginRight: '20px' }}>
+              <input
+                type="radio"
+                value="month"
+                checked={filterType === 'month'}
+                onChange={(e) => setFilterType(e.target.value as 'month' | 'dateRange')}
+                style={{ marginRight: '5px' }}
+              />
+              กรองตามเดือน
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="dateRange"
+                checked={filterType === 'dateRange'}
+                onChange={(e) => setFilterType(e.target.value as 'month' | 'dateRange')}
+                style={{ marginRight: '5px' }}
+              />
+              กรองตามช่วงวันที่
+            </label>
+          </div>
+
+          {/* แสดง Filter ตามประเภทที่เลือก */}
+          {filterType === 'month' ? (
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
               <label>
-                <input
-                  type="radio"
-                  value="dateRange"
-                  checked={filterType === 'dateRange'}
-                  onChange={(e) => setFilterType(e.target.value as 'month' | 'dateRange')}
-                  style={{ marginRight: '5px' }}
-                />
-                กรองตามช่วงวันที่
+                <span style={{ marginRight: '5px' }}>เดือน:</span>
+                <select 
+                  value={selectedMonth} 
+                  onChange={(e) => setSelectedMonth(e.target.value)}
+                  style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                >
+                  <option value="">-- เลือกเดือน --</option>
+                  <option value="1">มกราคม</option>
+                  <option value="2">กุมภาพันธ์</option>
+                  <option value="3">มีนาคม</option>
+                  <option value="4">เมษายน</option>
+                  <option value="5">พฤษภาคม</option>
+                  <option value="6">มิถุนายน</option>
+                  <option value="7">กรกฎาคม</option>
+                  <option value="8">สิงหาคม</option>
+                  <option value="9">กันยายน</option>
+                  <option value="10">ตุลาคม</option>
+                  <option value="11">พฤศจิกายน</option>
+                  <option value="12">ธันวาคม</option>
+                </select>
+              </label>
+
+              <label>
+                <span style={{ marginRight: '5px' }}>ปี:</span>
+                <select 
+                  value={selectedYear} 
+                  onChange={(e) => setSelectedYear(e.target.value)}
+                  style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                >
+                  {yearOptions.map(year => (
+                    <option key={year} value={year}>{year + 543}</option>
+                  ))}
+                </select>
               </label>
             </div>
+          ) : (
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
+              <label>
+                <span style={{ marginRight: '5px' }}>จากวันที่:</span>
+                <input 
+                  type="date" 
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                />
+              </label>
 
-            {/* แสดง Filter ตามประเภทที่เลือก */}
-            {filterType === 'month' ? (
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center' }}>
-                <label>
-                  <span style={{ marginRight: '5px' }}>เดือน:</span>
-                  <select 
-                    value={selectedMonth} 
-                    onChange={(e) => setSelectedMonth(e.target.value)}
-                    style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-                  >
-                    <option value="">-- เลือกเดือน --</option>
-                    {/* ... (ตัวเลือกเดือน) ... */}
-                    <option value="1">มกราคม</option>
-                    <option value="2">กุมภาพันธ์</option>
-                    <option value="3">มีนาคม</option>
-                    <option value="4">เมษายน</option>
-                    <option value="5">พฤษภาคม</option>
-                    <option value="6">มิถุนายน</option>
-                    <option value="7">กรกฎาคม</option>
-                    <option value="8">สิงหาคม</option>
-                    <option value="9">กันยายน</option>
-                    <option value="10">ตุลาคม</option>
-                    <option value="11">พฤศจิกายน</option>
-                    <option value="12">ธันวาคม</option>
-                  </select>
-                </label>
+              <label>
+                <span style={{ marginRight: '5px' }}>ถึงวันที่:</span>
+                <input 
+                  type="date" 
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                />
+              </label>
+            </div>
+          )}
 
-                <label>
-                  <span style={{ marginRight: '5px' }}>ปี:</span>
-                  <select 
-                    value={selectedYear} 
-                    onChange={(e) => setSelectedYear(e.target.value)}
-                    style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-                  >
-                    {yearOptions.map(year => (
-                      <option key={year} value={year}>{year + 543}</option>
-                    ))}
-                  </select>
-                </label>
-              </div>
-            ) : (
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center' }}>
-                <label>
-                  <span style={{ marginRight: '5px' }}>จากวันที่:</span>
-                  <input 
-                    type="date" 
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-                  />
-                </label>
-
-                <label>
-                  <span style={{ marginRight: '5px' }}>ถึงวันที่:</span>
-                  <input 
-                    type="date" 
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-                  />
-                </label>
-              </div>
-            )}
-
-            <button 
-              onClick={handleResetFilter}
-              style={{ 
-                marginTop: '15px',
-                padding: '8px 20px', 
-                cursor: 'pointer',
-                backgroundColor: '#ff6b6b',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                fontWeight: 'bold'
-              }}
-            >
-              🔄 Reset Filter
-            </button>
-          </div>
-        )}
+          <button 
+            onClick={handleResetFilter}
+            style={{ 
+              marginTop: '15px',
+              padding: '8px 20px', 
+              cursor: 'pointer',
+              backgroundColor: '#ff6b6b',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              fontWeight: 'bold'
+            }}
+          >
+            🔄 Reset Filter
+          </button>
+        </div>
         
       </div>
 
