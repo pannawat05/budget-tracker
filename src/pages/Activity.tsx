@@ -51,7 +51,7 @@ function Activity() {
     <div>
       <h1 className='text-3xl font-bold text-center mt-10'>Activity Page</h1>
       <p className='text-center mt-4'>This is where you can view your recent activities.</p>
-
+    <div class="overflow-x-auto">
       <table className="min-w-full bg-white shadow-lg rounded-lg overflow-hidden mx-auto mt-10 text-center text-gray-700">
         <thead className="bg-green-600 text-white">
           <tr>
@@ -90,6 +90,7 @@ function Activity() {
           )}
         </tbody>
       </table>
+    </div>
     </div>
   )
 }
