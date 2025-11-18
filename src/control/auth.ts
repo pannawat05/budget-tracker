@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 
-const link = "https://budget-tracker-backend-aevg.onrender.com";
+const link = import.meta.env.VITE_BACKEND_URL as string;
 
 interface Payload {
   email: string;
