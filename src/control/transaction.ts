@@ -5,7 +5,7 @@ export interface TransactionRequest {
   description: string; // จะถูกส่งไป backend เป็น "note"
 }
 
-const link = "https://budget-tracker-backend-aevg.onrender.com";
+const link = import.meta.env.VITE_BACKEND_URL as string;
 
 // จาก server (category list)
 export interface Category {
