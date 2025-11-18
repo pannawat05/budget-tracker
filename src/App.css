@@ -47,5 +47,5 @@ animation: slideDown 0.3s ease-in-out;
 }
 #box:hover #s{
   display: block;
- animation: fadeIn 0.5s ease-in-out;
+ animation: slideDown 0.5s ease-in-out;
 }
