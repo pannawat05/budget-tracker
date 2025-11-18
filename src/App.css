@@ -54,14 +54,14 @@ animation: slideDown 0.3s ease-in-out;
 
 #box #s {
   opacity: 0;
-    visibility: hidden;
+   isplay:none;
   transform: translateX(-20px);
   pointer-events: none; /* Prevents interaction when hidden */
 }
 
 #box:hover #s {
   opacity: 1;
-    visibility: visible;
+   display: flex;
   transform: translateX(0);
   animation: slideRight 0.5s ease-in-out;
   pointer-events: auto; /* Re-enables interaction */
