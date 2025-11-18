@@ -41,11 +41,21 @@ animation: slideDown 0.3s ease-in-out;
     transform: translateY(0);
   }
 }
+@keyframes slideRight{
+  from{
+    opacity: 0;
+    transform: translateX(0) ;
+  }
+  to{
+     opacity: 1;
+    transform: translatex(20px);
+  }
+}
 #box #s{
   display: none;
   opacity: 0;
 }
 #box:hover #s{
   display: block;
- animation: slideDown 0.5s ease-in-out;
+ animation: slideRight 0.5s ease-in-out;
 }
