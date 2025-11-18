@@ -15,20 +15,20 @@ function Login() {
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // ป้องกันหน้าโหลดใหม่ (ถูกต้องอยู่แล้ว)
+    e.preventDefault(); 
     
     setIsLoading(true); // 5. เริ่มโหลด...
     setError(null);     // 6. ล้าง Error เก่า
 
     try {
       await Getlogin({ email, password });
-      navigate('/'); // 7. ส่งไปหน้าแรก (วิธีที่ถูกต้อง)
+      navigate('/'); 
     } catch (err) {
       console.error('Login failed:', err);
       // 8. แสดง Error ให้ User เห็น
       setError('Invalid email or password. Please try again.');
     } finally {
-      setIsLoading(false); // 9. หยุดโหลด (ไม่ว่าจะสำเร็จหรือล้มเหลว)
+      setIsLoading(false); 
     }
   };
 
@@ -84,12 +84,9 @@ function Login() {
 
           <button
             type="submit"
-            
-            // 12. ลบ onClick ออก
             disabled={isLoading} // 13. ปิดปุ่มตอนโหลด
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {/* 14. เปลี่ยนข้อความตอนโหลด */}
             {isLoading ? 'Logging In...' : 'Log In'}
           </button>
         </form>
@@ -101,6 +98,12 @@ function Login() {
           </a>
         </p>
       </div>
+
+      <span className='align-left w-50 h-50'>
+        <a href="/">
+        <img src="https://www.flaticon.com/free-icon/home_9385212?term=home&page=1&position=16&origin=search&related_id=9385212#"  Style={{width:'100%',height:'100%'}} alt="" srcset="" />
+        </a>
+      </span>
     </div>
   );
 }

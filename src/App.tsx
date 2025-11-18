@@ -27,11 +27,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        
         {/* 4. กลุ่มของ Route ที่ "ไม่มี Nav" */}
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
-          {/* <Route path="/register" element={<Register />} /> */}
+           <Route path="/register" element={<Signup/>} />
         </Route>
 
         {/* 5. กลุ่มของ Route ที่ "มี Nav" */}
@@ -41,7 +40,6 @@ function App() {
           <Route path="/activity" element={<Activity />} />
           <Route path="/summary" element={<Summary />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/register" element={<Signup/>} />
            <Route path="/login" element={<Login/>} />
           <Route path="*" element={<Activity />} /> {/* (แนะนำ) หน้าที่หาไม่เจอ ให้กลับไปหน้าหลัก */}
         </Route>
