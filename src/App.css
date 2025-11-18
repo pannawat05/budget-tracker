@@ -41,3 +41,9 @@ animation: slideDown 0.3s ease-in-out;
     transform: translateY(0);
   }
 }
+#box #s{
+  display: none;
+}
+#box:hover #s{
+ display: block;
+}
