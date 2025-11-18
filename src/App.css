@@ -42,8 +42,10 @@ animation: slideDown 0.3s ease-in-out;
   }
 }
 #box #s{
+  display: none;
   opacity: 0;
 }
 #box:hover #s{
+  display: block;
  animation: fadeIn 0.5s ease-in-out;
 }
