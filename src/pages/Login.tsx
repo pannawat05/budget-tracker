@@ -101,7 +101,7 @@ function Login() {
 
       <span className='align-left w-50 h-50'>
         <a href="/">
-        <img src="https://www.flaticon.com/free-icon/home_9385212?term=home&page=1&position=16&origin=search&related_id=9385212#"  style={{width:'100%',height:'100%'}} alt="" srcset="" />
+        <img src="https://www.flaticon.com/free-icon/home_9385212?term=home&page=1&position=16&origin=search&related_id=9385212#"   alt="" srcset="" />
         </a>
       </span>
     </div>
